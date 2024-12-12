@@ -94,6 +94,7 @@
 				TargetAttributes = {
 					0B9CDBDB2D0871CC001ED14D = {
 						CreatedOnToolsVersion = 16.1;
+						LastSwiftMigration = 1610;
 					};
 				};
 			};
@@ -186,6 +187,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -242,16 +244,22 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 			};
 			name = Release;
 		};
 		0B9CDBE42D0871CC001ED14D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4BBYP7GDM3;
 				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "binpack/binpack-Bridging-Header.h";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -259,10 +267,14 @@
 		0B9CDBE52D0871CC001ED14D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4BBYP7GDM3;
 				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "binpack/binpack-Bridging-Header.h";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
