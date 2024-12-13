@@ -13,7 +13,7 @@ import Cxx
 
 struct Configuration {
     let sourcePath: String
-    let destinationPath: String
+    let destinationTemplate: String
     let scale: Int
     let padding: Int
 }
@@ -40,12 +40,12 @@ func printHelp() {
     print(
         """
         
-        usage: binpack  sourcePath  destinationPath  scale  padding
+        usage: binpack  sourcePath  destinationTemplate  scale  padding
                 
-        sourcePath:      path of SVG collection forder, eg: ~/Documents/icons_source, for current directory use .
-        destinationPath: path to save atlases and manifests, eg: ~/Documents/generated/v1, for current directory use .
-        scale:           scale of pictures, should be integer, 1 for 1x, 2 for 2x, 3 for 3x
-        padding:         count of clear pixels around all picture side, should be integer
+        sourcePath:          path of SVG collection forder, eg: ~/Documents/icons_source, for current directory use .
+        destinationTemplate: path to save atlases and manifests, eg: ~/Documents/generated/v1 or ./out/v2
+        scale:               scale of pictures, should be integer, 1 for 1x, 2 for 2x, 3 for 3x
+        padding:             count of clear pixels around all picture side, should be integer
         
         """
     )
@@ -107,7 +107,7 @@ func resolveArguments(fileManager: FileManager) -> Configuration {
         exit(1)
     }
     print("padding:", padding)
-    return Configuration(sourcePath: sourcePath, destinationPath: destinationPath, scale: scale, padding: padding)
+    return Configuration(sourcePath: sourcePath, destinationTemplate: destinationPath, scale: scale, padding: padding)
 }
 
 
@@ -177,9 +177,9 @@ func generateBitmaps(files: [String], sourcePath: String, scale: Int, padding: I
 
 
     // atlas size
-func calculateAtlasSize(images: [String: SvgCodeImage]) -> Int {
+func calculateAtlasSize(images: [String: SvgCodeImage], scale: Int) -> Int {
         // predicting atlas size
-    let magicConstantForMaxRects = 30 // don't touch!
+    let magicConstantForMaxRects = scale * 20 // don't touch!
     let square = images.values.reduce(0, { $0 + Int($1.width * $1.height) })
     var atlasSideSize = Int(sqrt(Double(square))) + magicConstantForMaxRects
     if atlasSideSize > 2048 { atlasSideSize = 2048 }
@@ -243,20 +243,27 @@ func pack(images: inout [String:SvgCodeImage], atlasWidth: Int, atlasHeight: Int
 
     // save
 func writeAtlasToDisk(
-    destinationPath: String,
+    destinationTemplate: String,
+    fileManager: FileManager,
     atlasWidth: Int,
     atlasHeight: Int,
     buffer: UnsafeMutableBufferPointer<UInt32>,
+    scale: Int,
     atlasNumber: Int,
     manifest: Manifest
 ) {
+    let pathOfTemplate = destinationTemplate.components(separatedBy: "/").dropLast().joined(separator: "/")
+    if !fileManager.fileExists(atPath: pathOfTemplate) {
+        try! fileManager.createDirectory(atPath: pathOfTemplate, withIntermediateDirectories: true)
+    }
+    let counter = atlasNumber == 0 ? "" : "_\(atlasNumber)"
+    let filenameTemplate = destinationTemplate + "\(scale == 1 ? "" : "@\(scale)x")" + counter
     let channelsCount = 4 // RGBA
-    let destinationFileTemplate = destinationPath + "/output\(atlasNumber == 0 ? "" : "_\(atlasNumber)")"
-    stbi_write_png(destinationFileTemplate + ".png", Int32(atlasWidth), Int32(atlasHeight), Int32(channelsCount), buffer.baseAddress, Int32(atlasWidth * channelsCount))
+    stbi_write_png(filenameTemplate + ".png", Int32(atlasWidth), Int32(atlasHeight), Int32(channelsCount), buffer.baseAddress, Int32(atlasWidth * channelsCount))
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.withoutEscapingSlashes, .prettyPrinted, .sortedKeys]
     let manifestData = try! encoder.encode(manifest)
-    let manifestURL = URL(fileURLWithPath: destinationFileTemplate + ".json")
+    let manifestURL = URL(fileURLWithPath: filenameTemplate + ".json")
     try! manifestData.write(to: manifestURL)
     buffer.deallocate()
 }
@@ -281,7 +288,7 @@ func main() {
     var atlasNumber = 0
         // main cycle
     while images.count > 0 {
-        let atlasSideSize = calculateAtlasSize(images: images)
+        let atlasSideSize = calculateAtlasSize(images: images, scale: configuration.scale)
         let atlasWidth = atlasSideSize
         let atlasHeight = atlasSideSize
         print("atlas size:", atlasWidth, atlasHeight)
@@ -294,10 +301,12 @@ func main() {
         """
         )
         writeAtlasToDisk(
-            destinationPath: configuration.destinationPath,
+            destinationTemplate: configuration.destinationTemplate,
+            fileManager: fileManager,
             atlasWidth: atlasWidth,
             atlasHeight: atlasHeight,
             buffer: packResult.data,
+            scale: configuration.scale,
             atlasNumber: atlasNumber,
             manifest: packResult.manifest
         )
@@ -305,7 +314,7 @@ func main() {
         atlasNumber += 1
     }
     
-    print("finished, check results at", configuration.destinationPath)
+    print("finished, check results at", configuration.destinationTemplate + "*")
 }
 
 

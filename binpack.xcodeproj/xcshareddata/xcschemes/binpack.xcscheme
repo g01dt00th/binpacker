@@ -53,15 +53,15 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "~/Documents/&#x418;&#x441;&#x445;&#x43e;&#x434;&#x43d;&#x438;&#x43a;&#x438;/tiles/icons-src/main"
+            argument = "~/Documents/&#x418;&#x441;&#x445;&#x43e;&#x434;&#x43d;&#x438;&#x43a;&#x438;/tiles/icons-src/&#x410;&#x440;&#x445;&#x438;&#x432;_2"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "~/Documents/&#x418;&#x441;&#x445;&#x43e;&#x434;&#x43d;&#x438;&#x43a;&#x438;/tiles/icons-src"
+            argument = "~/Documents/&#x418;&#x441;&#x445;&#x43e;&#x434;&#x43d;&#x438;&#x43a;&#x438;/tiles/icons-src/bz/v3"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "3"
+            argument = "4"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
