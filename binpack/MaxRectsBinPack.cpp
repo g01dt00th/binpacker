@@ -426,18 +426,18 @@ BaseRect MaxRectsBinPack::FindPositionForNewNodeContactPoint(int width, int heig
                 bestContactScore = score;
                 }
             }
-        if (freeRectangles[i].width >= height && freeRectangles[i].height >= width)
-            {
-            int score = ContactPointScoreNode(freeRectangles[i].x, freeRectangles[i].y, width, height);
-            if (score > bestContactScore)
-                {
-                bestNode.x = freeRectangles[i].x;
-                bestNode.y = freeRectangles[i].y;
-                bestNode.width = height;
-                bestNode.height = width;
-                bestContactScore = score;
-                }
-            }
+//        if (freeRectangles[i].width >= height && freeRectangles[i].height >= width)
+//            {
+//            int score = ContactPointScoreNode(freeRectangles[i].x, freeRectangles[i].y, width, height);
+//            if (score > bestContactScore)
+//                {
+//                bestNode.x = freeRectangles[i].x;
+//                bestNode.y = freeRectangles[i].y;
+//                bestNode.width = height;
+//                bestNode.height = width;
+//                bestContactScore = score;
+//                }
+//            }
         }
     return bestNode;
     }
@@ -494,7 +494,7 @@ bool MaxRectsBinPack::SplitFreeNode(BaseRect freeNode, const BaseRect &usedNode)
 
 void MaxRectsBinPack::PruneFreeList()
     {
-    
+    /*
     ///  Would be nice to do something like this, to avoid a Theta(n^2) loop through each pair.
     ///  But unfortunately it doesn't quite cut it, since we also want to detect containment.
     ///  Perhaps there's another way to do this faster than Theta(n^2).
@@ -511,22 +511,22 @@ void MaxRectsBinPack::PruneFreeList()
     		freeRectangles.erase(freeRectangles.begin() + i);
     		--i;
     	}
-    
+    */
 
     /// Go through each pair and remove any rectangle that is redundant.
-//    for(size_t i = 0; i < freeRectangles.size(); ++i)
-//        for(size_t j = i+1; j < freeRectangles.size(); ++j)
-//            {
-//            if (IsContainedIn(freeRectangles[i], freeRectangles[j]))
-//                {
-//                freeRectangles.erase(freeRectangles.begin()+i);
-//                --i;
-//                break;
-//                }
-//            if (IsContainedIn(freeRectangles[j], freeRectangles[i]))
-//                {
-//                freeRectangles.erase(freeRectangles.begin()+j);
-//                --j;
-//                }
-//            }
+    for(size_t i = 0; i < freeRectangles.size(); ++i)
+        for(size_t j = i+1; j < freeRectangles.size(); ++j)
+            {
+            if (IsContainedIn(freeRectangles[i], freeRectangles[j]))
+                {
+                freeRectangles.erase(freeRectangles.begin()+i);
+                --i;
+                break;
+                }
+            if (IsContainedIn(freeRectangles[j], freeRectangles[i]))
+                {
+                freeRectangles.erase(freeRectangles.begin()+j);
+                --j;
+                }
+            }
     }

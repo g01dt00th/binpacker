@@ -53,11 +53,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/d-roenko/Documents/&#x418;&#x441;&#x445;&#x43e;&#x434;&#x43d;&#x438;&#x43a;&#x438;/tiles/icons-src/main"
+            argument = "~/Documents/&#x418;&#x441;&#x445;&#x43e;&#x434;&#x43d;&#x438;&#x43a;&#x438;/tiles/icons-src/main"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "/Users/d-roenko/Documents/&#x418;&#x441;&#x445;&#x43e;&#x434;&#x43d;&#x438;&#x43a;&#x438;/tiles/icons-src"
+            argument = "~/Documents/&#x418;&#x441;&#x445;&#x43e;&#x434;&#x43d;&#x438;&#x43a;&#x438;/tiles/icons-src"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
