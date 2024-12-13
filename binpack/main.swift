@@ -1,13 +1,14 @@
-//
-//  main.swift
-//  binpack
-//
-//  Created by Denis Roenko on 10.12.2024.
-//
+    //
+    //  main.swift
+    //  binpack
+    //
+    //  Created by Denis Roenko on 10.12.2024.
+    //
 
 import Foundation
 import CxxStdlib
 import Cxx
+
 
 
 struct Configuration {
@@ -28,12 +29,13 @@ struct ManifestElement: Codable {
 typealias Manifest = [String: ManifestElement]
 
 struct PackResult {
-    var data: UnsafeMutableBufferPointer<UInt32>!
+    let data: UnsafeMutableBufferPointer<UInt32>
     let rotatedImages: Int
     let manifest: Manifest
 }
 
-// help
+
+    // help
 func printHelp() {
     print(
         """
@@ -49,7 +51,8 @@ func printHelp() {
     )
 }
 
-// arguments
+
+    // arguments
 func resolveArguments(fileManager: FileManager) -> Configuration {
         // check arguments and prepare to run
     let arguments = CommandLine.arguments
@@ -107,7 +110,8 @@ func resolveArguments(fileManager: FileManager) -> Configuration {
     return Configuration(sourcePath: sourcePath, destinationPath: destinationPath, scale: scale, padding: padding)
 }
 
-// finding files in source path
+
+    // finding files in source path
 func resolveFiles(sourcePath: String, fileManager: FileManager) -> [String] {
     let files = try! fileManager.contentsOfDirectory(atPath: sourcePath).filter { $0.hasSuffix("svg") }
     print("total files:", files.count)
@@ -115,7 +119,8 @@ func resolveFiles(sourcePath: String, fileManager: FileManager) -> [String] {
     
 }
 
-// bitmaps
+
+    // bitmaps
 func generateBitmaps(files: [String], sourcePath: String, scale: Int, padding: Int) -> [String: SvgCodeImage] {
     var images = [String: SvgCodeImage]()
     images.reserveCapacity(files.count)
@@ -170,9 +175,10 @@ func generateBitmaps(files: [String], sourcePath: String, scale: Int, padding: I
     return images
 }
 
-// atlas size
+
+    // atlas size
 func calculateAtlasSize(images: [String: SvgCodeImage]) -> Int {
-    // predicting atlas size
+        // predicting atlas size
     let magicConstantForMaxRects = 30 // don't touch!
     let square = images.values.reduce(0, { $0 + Int($1.width * $1.height) })
     var atlasSideSize = Int(sqrt(Double(square))) + magicConstantForMaxRects
@@ -180,7 +186,8 @@ func calculateAtlasSize(images: [String: SvgCodeImage]) -> Int {
     return atlasSideSize
 }
 
-// pack
+
+    // pack
 func pack(images: inout [String:SvgCodeImage], atlasWidth: Int, atlasHeight: Int, scale: Int) -> PackResult {
     var cxxBinPack = MaxRectsBinPack()
     var cxxInput = InputVector()
@@ -233,7 +240,8 @@ func pack(images: inout [String:SvgCodeImage], atlasWidth: Int, atlasHeight: Int
     return PackResult(data: buffer, rotatedImages: rotatedImages, manifest: manifest)
 }
 
-// save
+
+    // save
 func writeAtlasToDisk(
     destinationPath: String,
     atlasWidth: Int,
@@ -254,7 +262,7 @@ func writeAtlasToDisk(
 }
 
 
-// main
+    // main
 func main() {
     let fileManager = FileManager.default
     let configuration = resolveArguments(fileManager: fileManager)
@@ -301,5 +309,5 @@ func main() {
 }
 
 
-// run
+    // run
 main()
