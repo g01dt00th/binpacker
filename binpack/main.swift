@@ -63,6 +63,13 @@ func resolveArguments(fileManager: FileManager) -> Configuration {
     let homePath = String(fileManager.homeDirectoryForCurrentUser.absoluteString.dropLast())
     let currentDirectoryPath = fileManager.currentDirectoryPath
     var sourceArgument = arguments[1].last == "/" ? String(arguments[1].dropLast()) : arguments[1]
+    if sourceArgument.prefix(2) == ".." {
+        let ups = sourceArgument.ranges(of: "../").count
+        let uppedDirectoryPath = currentDirectoryPath.components(separatedBy: "/")
+            .dropLast(ups)
+            .joined(separator: "/")
+        sourceArgument = uppedDirectoryPath + "/" + String(sourceArgument.dropFirst(ups * 3))
+    }
     if sourceArgument.first == "." {
         sourceArgument = currentDirectoryPath + String(sourceArgument.dropFirst())
     }
@@ -78,6 +85,13 @@ func resolveArguments(fileManager: FileManager) -> Configuration {
     print("source path:", sourcePath)
     
     var destinationArgument = arguments[2].last == "/" ? String(arguments[2].dropLast()) : arguments[2]
+    if destinationArgument.prefix(2) == ".." {
+        let ups = destinationArgument.ranges(of: "../").count
+        let uppedDirectoryPath = currentDirectoryPath.components(separatedBy: "/")
+            .dropLast(ups)
+            .joined(separator: "/")
+        destinationArgument = uppedDirectoryPath + "/" + String(destinationArgument.dropFirst(ups * 3))
+    }
     if destinationArgument.first == "." {
         destinationArgument = currentDirectoryPath + String(destinationArgument.dropFirst())
     }
